@@ -35,8 +35,8 @@ export class Circle {
   }
 
   render(fillStyle: string | undefined,
-         lineWidth: number | undefined = undefined, 
-         lineStyle: string | undefined = undefined) {
+         strokeStyle: string | undefined = undefined,
+         lineWidth: number | undefined = undefined) {
     this.ctx.beginPath();
     this.ctx.arc(this.cx, this.cy, this.radius, 0, 2 * Math.PI, false);
     console.log(fillStyle); 
@@ -45,7 +45,7 @@ export class Circle {
       this.ctx.fill();
     }
 
-    if(lineStyle !== undefined && lineWidth !== undefined) {
+    if(strokeStyle !== undefined && lineWidth !== undefined) {
       this.ctx.lineWidth = lineWidth;
       this.ctx.strokeStyle = strokeStyle;
       this.ctx.stroke();

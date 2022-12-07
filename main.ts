@@ -26,7 +26,7 @@ function update() {
   // circle(ctx, circleX, 60, 40, 'tomato');
 
   const circ = new Circle(ctx, circleX, 60, 40);
-  circ.render('tomato', undefined, undefined);
+  circ.render('tomato', 'black', 4);
   setLastTime();
   w.requestAnimationFrame(update);
 }
