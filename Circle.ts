@@ -1,3 +1,13 @@
+export type CircleOptions = {
+  ctx: CanvasRenderingContext2D;
+  cx: number;
+  cy: number;
+  radius: number;
+  fillStyle: string;
+  strokeStyle: string;
+  strokeWidth: number;
+};
+
 export class Circle {
   ctx: CanvasRenderingContext2D;
   radius: number | undefined;
@@ -8,16 +18,14 @@ export class Circle {
   strokeStyle: string | undefined;
   strokeWidth: number | undefined;
 
-  constructor (ctx: CanvasRenderingContext2D, cx: number, cy: number, radius: number) {
-    this.ctx = ctx;
-    this.init(cx, cy, radius);
-  }
-
-  init(cx: number, cy: number, radius: number) {
-    this.cx = cx;
-    this.cy = cy;
-    this.origin = [cx, cy];
-    this.radius = radius;
+  constructor (options: CircleOptions) {
+    this.ctx = options.ctx;
+    this.cx = options.cx;
+    this.cy = options.cy;
+    this.radius = options.radius;
+    this.fillStyle = options.fillStyle;
+    this.strokeStyle = options.strokeStyle;
+    this.strokeWidth = options.strokeWidth;
   }
 
   distance(dest: number[], pos: number[]) {
@@ -34,20 +42,18 @@ export class Circle {
     return a + (b - a) * t;
   }
 
-  render(fillStyle: string | undefined,
-    strokeStyle: string | undefined = undefined,
-    lineWidth: number | undefined = undefined) {
+  render() {
     this.ctx.beginPath();
     this.ctx.arc(this.cx!, this.cy!, this.radius!, 0, 2 * Math.PI, false);
-    console.log(fillStyle);
-    if (fillStyle !== undefined) {
-      this.ctx.fillStyle = fillStyle;
+
+    if (this.fillStyle !== undefined) {
+      this.ctx.fillStyle = this.fillStyle;
       this.ctx.fill();
     }
 
-    if (strokeStyle !== undefined && lineWidth !== undefined) {
-      this.ctx.lineWidth = lineWidth;
-      this.ctx.strokeStyle = strokeStyle;
+    if (this.strokeStyle !== undefined && this.strokeWidth !== undefined) {
+      this.ctx.lineWidth = this.strokeWidth;
+      this.ctx.strokeStyle = this.strokeStyle;
       this.ctx.stroke();
     }
   }
