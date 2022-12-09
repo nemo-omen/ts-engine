@@ -12,22 +12,23 @@ import { Vector2 } from './Vector2.ts';
 
 let mult = 1;
 
-const minX = 40;
-const minY = 60;
-const maxX = canvas.width - 40;
-const maxY = canvas.height - 60;
 
-let dest: Vector2 = new Vector2(minX, minY);
 
 const circle: Circle = new Circle({
   ctx: ctx!,
-  cx: minX,
-  cy: 60,
-  radius: minX,
+  cx: 20,
+  cy: 20,
+  radius: 20,
   fillStyle: 'tomato',
   strokeStyle: 'white',
   strokeWidth: 2
 });
+
+const minX = circle.radius;
+const minY = circle.radius;
+const maxX = canvas.width - circle.radius!;
+const maxY = canvas.height - circle.radius!;
+let dest: Vector2 = new Vector2(minX, minY);
 
 w.requestAnimationFrame(update);
 

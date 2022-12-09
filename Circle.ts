@@ -13,15 +13,14 @@ export type CircleOptions = {
 export class Circle {
   ctx: CanvasRenderingContext2D;
   radius: number | undefined;
-  cx: number | undefined;
-  cy: number | undefined;
+  position: Vector2 | undefined;
   origin: number[] | undefined[] | undefined;
+  destination: Vector2 | undefined;
+  velocity: Vector2 | undefined;
   fillStyle: string | undefined;
   strokeStyle: string | undefined;
   strokeWidth: number | undefined;
 
-  position: Vector2 | undefined;
-  velocity: Vector2 | undefined;
 
   constructor (options: CircleOptions) {
     this.ctx = options.ctx;
@@ -39,10 +38,27 @@ export class Circle {
     return Math.sqrt(Math.pow((dest[0] - pos[0]), 2) + Math.pow((dest[0] - pos[0]), 2));
   }
 
-  move(destX: number, destY: number, deltaTime: number) {
-    const destination = new Vector2(destX, destY);
 
-    this.position = Vector2.add(this.position, this.velocity!);
+  /**
+   * Calculate movement — 3 steps:
+   * 1. Calculate the movement vector [xb - xa, yb - ya]
+   * 2. Compute the movement vector's length
+   * 3. Normalize the movement vector
+   * @param destX 
+   * @param destY 
+   * @param deltaTime 
+   */
+
+  /**
+   * Resource: https://stackoverflow.com/a/20636920
+   */
+
+  move(destX: number, destY: number, deltaTime: number) {
+    this.destination = new Vector2(destX, destY);
+    // const mov = Vector2.movement(this.position!, new Vector2(destX, destY));
+    // const norm = Vector2.normalize(mov);
+    // this.position = Vector2.add(this.position!, this.velocity!);
+    this.position = Vector2.pos(this.position!, this.destination!, deltaTime, this.velocity!.x);
   }
 
   lerp(a: number, b: number, t: number): number {
@@ -63,5 +79,9 @@ export class Circle {
       this.ctx.strokeStyle = this.strokeStyle;
       this.ctx.stroke();
     }
+  }
+
+  update() {
+
   }
 }

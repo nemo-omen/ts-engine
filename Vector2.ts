@@ -20,6 +20,10 @@ export class Vector2 {
       return new Vector2((v1.x - v2.x), (v1.y - v2.y));
    }
 
+   static movement(v1: Vector2, v2: Vector2) {
+      return new Vector2((v2.x - v1.x), (v2.y - v1.y));
+   }
+
    static add(v1: Vector2, v2: Vector2) {
       return new Vector2((v1.x + v2.x), (v1.y + v2.y));
    }
@@ -48,5 +52,25 @@ export class Vector2 {
       }
 
       return norm;
+   }
+
+   static dot(v1: Vector2, v2: Vector2): number {
+      return (v1.x * v2.x) + (v1.y * v2.y);
+   }
+
+   static delta(v: Vector2, deltaTime: number, speed: number) {
+      return (
+         Vector2.scale(
+            Vector2.scale(
+               Vector2.normalize(v),
+               deltaTime
+            ),
+            speed)
+      );
+   }
+
+   static pos(startPos: Vector2, endPos: Vector2, deltaTime: number, speed: number) {
+      const mov = Vector2.subtract(endPos, startPos);
+      return Vector2.delta(mov, deltaTime, speed);
    }
 }
