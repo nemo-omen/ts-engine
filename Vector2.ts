@@ -7,42 +7,40 @@ export class Vector2 {
       this.y = y;
    }
 
-   mag(): number {
-      return Math.sqrt((this.x * this.x) - (this.y * this.y));
+   static mag(v: Vector2): number {
+      return Math.sqrt((v.x * v.x) - (v.y * v.y));
    }
 
-   distance(v2: Vector2): number {
-      const distVec = new Vector2((v2.x - this.x), (v2.y - this.y));
+   static distance(v1: Vector2, v2: Vector2): number {
+      const distVec = new Vector2((v2.x - v1.x), (v2.y - v1.y));
       return Math.sqrt((distVec.x * distVec.x) + (distVec.y * distVec.y));
    }
 
-   direction(v2: Vector2): Vector2 {
-      return new Vector2((this.x - v2.x), (this.y - v2.y));
+   static direction(v1: Vector2, v2: Vector2): Vector2 {
+      return new Vector2((v1.x - v2.x), (v1.y - v2.y));
    }
 
-   add(v: Vector2) {
-      this.x += v.x;
-      this.y += v.y;
+   static add(v1: Vector2, v2: Vector2) {
+      return new Vector2((v1.x + v2.x), (v1.y + v2.y));
    }
 
-   subtract(v: Vector2) {
-      this.x -= v.x;
-      this.y -= v.y;
+   static subtract(v1: Vector2, v2: Vector2) {
+      return new Vector2((v1.x - v2.x), (v1.y - v2.y));
    }
 
-   mult(v: Vector2) {
-      this.x *= v.x;
-      this.y *= v.y;
+   // note: need to "flip" the vector (opposite dir, etc)?
+   // Vector2.scale(-1)
+   static scale(v: Vector2, n: number): Vector2 {
+      return new Vector2((v.x * n), (v.y * n));
    }
 
-   div(v: Vector2) {
-      this.x /= v.x;
-      this.y /= v.y;
+   static mult(v1: Vector2, v2: Vector2): Vector2 {
+      return new Vector2((v1.x * v2.x), (v1.y * v2.y));
    }
 
-   normalize() {
-      const norm: Vector2 = new Vector2(this.x, this.y);
-      const length = norm.mag();
+   static normalize(v: Vector2) {
+      const norm: Vector2 = new Vector2(v.x, v.y);
+      const length = Vector2.mag(norm);
 
       if (length != 0) {
          norm.x /= length;

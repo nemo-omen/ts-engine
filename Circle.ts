@@ -32,7 +32,7 @@ export class Circle {
     this.strokeStyle = options.strokeStyle;
     this.strokeWidth = options.strokeWidth;
     this.position = new Vector2(options.cx, options.cy);
-    this.velocity = new Vector2(5, 0); // hardcoded velocity for now
+    this.velocity = new Vector2(5, 5); // hardcoded velocity for now
   }
 
   distance(dest: number[], pos: number[]) {
@@ -42,18 +42,7 @@ export class Circle {
   move(destX: number, destY: number, deltaTime: number) {
     const destination = new Vector2(destX, destY);
 
-    const dir = this.position!.direction(destination);
-    const norm = dir.normalize();
-    const distance = this.position!.distance(destination);
-
-    // console.log(distance);
-    // this.position!.x -= norm.x * this.velocity!.x * deltaTime;
-    // this.position!.y -= norm.y * this.velocity!.y * deltaTime;
-    this.position!.add(this.velocity!);
-
-    // this.origin = [this.cx!, this.cy!];
-    // this.cx! += this.lerp(this.origin[0], destX, deltaTime);
-    // this.cy! += this.lerp(this.origin[1], destY, deltaTime);
+    this.position = Vector2.add(this.position, this.velocity!);
   }
 
   lerp(a: number, b: number, t: number): number {
