@@ -13,6 +13,8 @@ let mult = 1;
 const minX = 40;
 const maxX = canvas.width - 40;
 
+let dest: number;
+
 const circle: Circle = new Circle({
   ctx: ctx!,
   cx: minX,
@@ -27,12 +29,37 @@ w.requestAnimationFrame(update);
 
 function update() {
   clear(); // clear last frame
-  if ((circle.cx! > maxX) || (circle.cx! < minX)) {
-    mult = (mult * -1);
+
+  if ((circle.position!.x >= (maxX))) {
+    dest = minX;
+
+    if (circle.velocity!.x > 0) {
+      circle.velocity!.x *= -1;
+    }
+
+    if (circle.velocity!.y > 0) {
+      circle.velocity!.y *= -1;
+    }
   }
 
-  circle.cx! += mult * (deltaTime() * 500);
+  if ((circle.position!.x <= (minX))) {
+    dest = maxX;
+
+    // negate velocity if less than 0
+    if (circle.velocity!.x < 0) {
+      circle.velocity!.x *= -1;
+    }
+
+    // negate velocity if greater than 0
+    if (circle.velocity!.y < 0) {
+      circle.velocity!.y *= -1;
+    }
+  }
+
+  circle.move(dest, circle.position!.y, deltaTime());
+
   circle.render();
+
   w.requestAnimationFrame(update);
 }
 
