@@ -58,7 +58,8 @@ export class Circle {
     // const mov = Vector2.movement(this.position!, new Vector2(destX, destY));
     // const norm = Vector2.normalize(mov);
     // this.position = Vector2.add(this.position!, this.velocity!);
-    this.position = Vector2.pos(this.position!, this.destination!, deltaTime, this.velocity!.x);
+    this.position = Vector2.pos(this.position!, this.destination!, deltaTime, 300);
+    // console.log(this.position);
   }
 
   lerp(a: number, b: number, t: number): number {

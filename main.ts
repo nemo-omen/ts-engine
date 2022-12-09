@@ -28,7 +28,7 @@ const minX = circle.radius;
 const minY = circle.radius;
 const maxX = canvas.width - circle.radius!;
 const maxY = canvas.height - circle.radius!;
-let dest: Vector2 = new Vector2(minX, minY);
+let dest: Vector2 = new Vector2(minX!, minY!);
 
 w.requestAnimationFrame(update);
 
@@ -37,8 +37,8 @@ function update() {
   // circle.position!.y = Math.floor(Math.random() * (65 - 55) + 55);
 
   if ((circle.position!.x >= maxX) || circle.position!.y >= maxY) {
-    dest.x = minX;
-    dest.y = maxY;
+    dest.x = minX!;
+    dest.y = maxY!;
 
     if (circle.velocity!.x > 0) {
       circle.velocity!.x *= -1;
@@ -49,7 +49,7 @@ function update() {
     }
   }
 
-  if ((circle.position!.x <= minX) || circle.position!.y <= minY) {
+  if ((circle.position!.x <= minX!) || circle.position!.y <= minY!) {
     dest.x = maxX;
     dest.x = maxY;
 
