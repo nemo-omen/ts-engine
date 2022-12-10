@@ -38,6 +38,17 @@ export class Vector2 {
       return new Vector2((v.x * n), (v.y * n));
    }
 
+   static translate(v: Vector2, opt: { tx: number, ty: number; }): Vector2 {
+      return new Vector2(v.x + opt.tx, v.y + opt.ty);
+   }
+
+   static rotate(v: Vector2, angle: number): Vector2 {
+      return new Vector2(
+         v.x * Math.cos(angle) - v.y * Math.sin(angle),
+         v.y * Math.sin(angle) + v.y * Math.cos(angle)
+      );
+   }
+
    static mult(v1: Vector2, v2: Vector2): Vector2 {
       return new Vector2((v1.x * v2.x), (v1.y * v2.y));
    }
