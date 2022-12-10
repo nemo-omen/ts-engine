@@ -58,6 +58,10 @@ export class Vector2 {
       return (v1.x * v2.x) + (v1.y * v2.y);
    }
 
+   static perp(v1: Vector2): Vector2 {
+      return new Vector2(v1.y, -v1.x);
+   }
+
    static delta(v: Vector2, deltaTime: number, speed: number) {
       return (
          Vector2.scale(

@@ -34,34 +34,15 @@ w.requestAnimationFrame(update);
 
 function update() {
   clear(); // clear last frame
-  // circle.position!.y = Math.floor(Math.random() * (65 - 55) + 55);
 
   if ((circle.position!.x >= maxX) || circle.position!.y >= maxY) {
     dest.x = minX!;
-    dest.y = maxY!;
-
-    if (circle.velocity!.x > 0) {
-      circle.velocity!.x *= -1;
-    }
-
-    if (circle.velocity!.y > 0) {
-      circle.velocity!.y *= -1;
-    }
+    dest.y = minY!;
   }
 
   if ((circle.position!.x <= minX!) || circle.position!.y <= minY!) {
     dest.x = maxX;
-    dest.x = maxY;
-
-    // negate velocity if less than 0
-    if (circle.velocity!.x < 0) {
-      circle.velocity!.x *= -1;
-    }
-
-    // negate velocity if greater than 0;
-    if (circle.velocity!.y < 0) {
-      circle.velocity!.y *= -1;
-    }
+    dest.y = maxY;
   }
 
   circle.move(dest.x, dest.y, deltaTime());
