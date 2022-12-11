@@ -7,13 +7,71 @@ export class Vector2 {
       this.y = y;
    }
 
+   /*********** INSTANCE METHODS ***********/
+   mag(): number {
+      return Math.sqrt((this.x * this.x) - (this.y * this.y));
+   }
+
+   add(v: Vector2) {
+      this.x + v.x;
+      this.y + v.y;
+   }
+
+   subtract(v: Vector2) {
+      this.x - v.x;
+      this.y - v.y;
+   }
+
+   // note: need to "flip" the vector (opposite dir, etc)?
+   // Vector2.scale(-1)
+   scale(n: number) {
+      return new Vector2((v.x * n), (v.y * n));
+   }
+
+   translate(opt: { tx: number, ty: number; }) {
+      this.x += opt.tx;
+      this.y += opt.ty;
+   }
+
+   rotate(angle: number) {
+      this.x *= Math.cos(angle) - this.y * Math.sin(angle);
+      this.y *= Math.sin(angle) + this.y * Math.cos(angle);
+   }
+
+   mult(v: Vector2) {
+      this.x *= v.x;
+      this.y *= v.y;
+   }
+
+   normalize() {
+      const length = this.mag();
+
+      if (length != 0) {
+         this.x /= length;
+         this.y /= length;
+      }
+   }
+
+   dot(v: Vector2): number {
+      return (this.x * v.x) + (this.y * v.y);
+   }
+
+   cross(v: Vector2): number {
+      return (this.x * v.y) - (this.y * v.y);
+   }
+
+   perp(): Vector2 {
+      return new Vector2(this.y, -this.x);
+   }
+
+   /************ STATIC METHODS ************/
    static mag(v: Vector2): number {
       return Math.sqrt((v.x * v.x) - (v.y * v.y));
    }
 
    static distance(v1: Vector2, v2: Vector2): number {
-      const distVec = new Vector2((v2.x - v1.x), (v2.y - v1.y));
-      return Math.sqrt((distVec.x * distVec.x) + (distVec.y * distVec.y));
+      const d = new Vector2((v2.x - v1.x), (v2.y - v1.y));
+      return Math.sqrt((d.x * d.x) + (d.y * d.y));
    }
 
    static direction(v1: Vector2, v2: Vector2): Vector2 {
@@ -67,6 +125,10 @@ export class Vector2 {
 
    static dot(v1: Vector2, v2: Vector2): number {
       return (v1.x * v2.x) + (v1.y * v2.y);
+   }
+
+   static cross(v1: Vector2, v2: Vector2): number {
+      return (v1.x * v2.y) - (v1.y * v2.y);
    }
 
    static perp(v1: Vector2): Vector2 {

@@ -34,11 +34,6 @@ export class Circle {
     this.velocity = new Vector2(5, 5); // hardcoded velocity for now
   }
 
-  distance(dest: number[], pos: number[]) {
-    return Math.sqrt(Math.pow((dest[0] - pos[0]), 2) + Math.pow((dest[0] - pos[0]), 2));
-  }
-
-
   /**
    * Calculate movement — 3 steps:
    * 1. Calculate the movement vector [xb - xa, yb - ya]
@@ -55,10 +50,10 @@ export class Circle {
 
   move(destX: number, destY: number, deltaTime: number) {
     this.destination = new Vector2(destX, destY);
-    // const mov = Vector2.movement(this.position!, new Vector2(destX, destY));
-    // const norm = Vector2.normalize(mov);
-    // this.position = Vector2.add(this.position!, this.velocity!);
-    this.position = Vector2.add(this.position!, Vector2.pos(this.position!, this.destination!, deltaTime, 300));
+    this.position = Vector2.add(
+      this.position!,
+      Vector2.pos(this.position!, this.destination!, deltaTime, 300)
+    );
   }
 
   lerp(a: number, b: number, t: number): number {
