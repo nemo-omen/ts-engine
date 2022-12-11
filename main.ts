@@ -5,55 +5,8 @@
  * https://www.gameludere.com/2019/11/23/vector-algebra-and-game-programming/
  */
 import './style.css';
-import { w, canvas, ctx } from './canvas.ts';
-import { Circle } from './Circle.ts';
-import { deltaTime } from './deltaTime.ts';
-import { Vector2 } from './Vector2.ts';
+import { App } from './App.ts';
 
-let mult = 1;
+const app: App = new App();
 
-
-
-const circle: Circle = new Circle({
-  ctx: ctx!,
-  cx: 20,
-  cy: 20,
-  radius: 20,
-  fillStyle: 'tomato',
-  strokeStyle: 'white',
-  strokeWidth: 2
-});
-
-const minX = circle.radius;
-const minY = circle.radius;
-const maxX = canvas.width - circle.radius!;
-const maxY = canvas.height - circle.radius!;
-let dest: Vector2 = new Vector2(minX!, minY!);
-
-w.requestAnimationFrame(update);
-
-function update() {
-  clear(); // clear last frame
-
-  if ((circle.position!.x >= maxX) || circle.position!.y >= maxY) {
-    dest.x = minX!;
-    dest.y = minY!;
-  }
-
-  if ((circle.position!.x <= minX!) || circle.position!.y <= minY!) {
-    dest.x = maxX;
-    dest.y = maxY;
-  }
-
-  circle.move(dest.x, dest.y, deltaTime());
-
-  circle.render();
-
-  w.requestAnimationFrame(update);
-}
-
-function clear() {
-  ctx!.fillStyle = '#120919';
-
-  ctx!.fillRect(0, 0, canvas.width, canvas.height);
-}
+app.start();

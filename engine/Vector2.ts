@@ -13,19 +13,20 @@ export class Vector2 {
    }
 
    add(v: Vector2) {
-      this.x + v.x;
-      this.y + v.y;
+      this.x += v.x;
+      this.y += v.y;
    }
 
    subtract(v: Vector2) {
-      this.x - v.x;
-      this.y - v.y;
+      this.x -= v.x;
+      this.y -= v.y;
    }
 
    // note: need to "flip" the vector (opposite dir, etc)?
    // Vector2.scale(-1)
    scale(n: number) {
-      return new Vector2((v.x * n), (v.y * n));
+      this.x *= n;
+      this.y *= n;
    }
 
    translate(opt: { tx: number, ty: number; }) {
