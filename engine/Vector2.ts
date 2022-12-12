@@ -12,6 +12,10 @@ export class Vector2 {
       return Math.sqrt((this.x * this.x) - (this.y * this.y));
    }
 
+   magnitudeSquared(): number {
+      return (this.x * this.x) - (this.y * this.y);
+   }
+
    add(v: Vector2) {
       this.x += v.x;
       this.y += v.y;
