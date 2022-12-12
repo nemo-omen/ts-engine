@@ -8,6 +8,7 @@ export class Particle {
    acceleration: Vector2;
    sumForces: Vector2;
    mass: number;
+   invMass: number;
 
    constructor (x: number, y: number, radius: number = 8.0, mass: number = 1.0) {
       this.position = new Vector2(x, y);
@@ -16,6 +17,11 @@ export class Particle {
       this.acceleration = new Vector2(0, 0);
       this.sumForces = new Vector2(0, 0);
       this.mass = mass;
+      if (mass != 0.0) {
+         this.invMass = 1.0 / mass;
+      } else {
+         this.invMass = 0.0;
+      }
    }
 
    update(deltaTime: number) {
@@ -42,7 +48,7 @@ export class Particle {
    // Integrate acceleration and velocity to find the new position
    integrate(deltaTime: number) {
       // acceleration = force / mass
-      this.acceleration = Vector2.scaleDiv(this.sumForces, this.mass);
+      this.acceleration = Vector2.scale(this.sumForces, this.invMass);
       // particle.velocity += particle.acceleration * deltaTime
       this.velocity.add(Vector2.scale(this.acceleration, deltaTime));
       // particle.position += particle.velocity * deltaTime
