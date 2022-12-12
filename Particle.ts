@@ -1,4 +1,5 @@
 import { Vector2 } from './engine/Vector2.ts';
+import { PIXELS_PER_METER } from './constants.ts';
 
 export class Particle {
    position: Vector2;
@@ -14,12 +15,22 @@ export class Particle {
    }
 
    update(deltaTime: number) {
-      this.setVelocity(200 * deltaTime, 50 * deltaTime);
-      this.position.add(this.velocity);
+      this.setAcceleration(0.0, 9.8 * PIXELS_PER_METER);
+      // Integrate acceleration and velocity to find the new position
+      // !!!THIS IS IMPORTANT!!!
+      // particle.velocity += particle.acceleration * deltaTime
+      this.velocity.add(Vector2.scale(this.acceleration, deltaTime));
+      // particle.position += particle.velocity * deltaTime
+      this.position.add(Vector2.scale(this.velocity, deltaTime));
    }
 
    setVelocity(x: number, y: number) {
       this.velocity.x = x;
       this.velocity.y = y;
+   }
+
+   setAcceleration(x: number, y: number) {
+      this.acceleration.x = x;
+      this.acceleration.y = y;
    }
 }

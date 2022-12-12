@@ -73,7 +73,7 @@ export class App {
 
    setListeners() {
       console.log('Setting listeners');
-      document.body.addEventListener('resize', () => {
+      window.addEventListener('resize', () => {
          this.setDimensions();
       });
 

@@ -79,6 +79,9 @@ class Graphics {
    setDimensions(width: number, height: number) {
       this.width = width;
       this.height = height;
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+      this.clear();
    }
 }
 
