@@ -2,20 +2,22 @@ import { Vector2 } from './engine/Vector2.ts';
 import { PIXELS_PER_METER } from './constants.ts';
 
 export class Particle {
+   radius: number;
    position: Vector2;
    velocity: Vector2; // change in position per frame
    acceleration: Vector2;
    mass: number;
 
-   constructor (x: number, y: number, mass: number = 1.0) {
+   constructor (x: number, y: number, radius: number = 8.0, mass: number = 1.0) {
       this.position = new Vector2(x, y);
+      this.radius = radius;
       this.velocity = new Vector2(0, 0);
       this.acceleration = new Vector2(0, 0);
       this.mass = mass;
    }
 
    update(deltaTime: number) {
-      this.setAcceleration(0.0, 9.8 * PIXELS_PER_METER);
+      this.setAcceleration(0.0 * PIXELS_PER_METER, 9.8 * PIXELS_PER_METER);
       // Integrate acceleration and velocity to find the new position
       // !!!THIS IS IMPORTANT!!!
       // particle.velocity += particle.acceleration * deltaTime

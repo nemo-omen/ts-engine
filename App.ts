@@ -49,7 +49,7 @@ export class App {
          this.world.update(this.deltaTime);
 
          for (const p of this.world.particles) {
-            this.g.drawCircle(p.position.x, p.position.y, 8, 'tomato', 'cyan', 1);
+            this.g.drawCircle(p.position.x, p.position.y, p.radius, 'tomato', 'cyan', 1);
          }
          requestAnimationFrame(() => this.update());
       } else {
