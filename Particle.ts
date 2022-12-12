@@ -6,6 +6,7 @@ export class Particle {
    position: Vector2;
    velocity: Vector2; // change in position per frame
    acceleration: Vector2;
+   sumForces: Vector2;
    mass: number;
 
    constructor (x: number, y: number, radius: number = 8.0, mass: number = 1.0) {
@@ -13,17 +14,41 @@ export class Particle {
       this.radius = radius;
       this.velocity = new Vector2(0, 0);
       this.acceleration = new Vector2(0, 0);
+      this.sumForces = new Vector2(0, 0);
       this.mass = mass;
    }
 
    update(deltaTime: number) {
-      this.setAcceleration(0.0 * PIXELS_PER_METER, 9.8 * PIXELS_PER_METER);
-      // Integrate acceleration and velocity to find the new position
-      // !!!THIS IS IMPORTANT!!!
+      // constant acceleration
+      // this.setAcceleration(0.0 * PIXELS_PER_METER, 9.8 * PIXELS_PER_METER);
+
+      this.integrate(deltaTime);
+   }
+
+   weight(): Vector2 {
+      return new Vector2(0.0, this.mass * 9.8 * PIXELS_PER_METER);
+   }
+
+   addForce(force: Vector2) {
+      this.sumForces.add(force);
+   }
+
+   clearForces() {
+      this.sumForces.x = 0.0;
+      this.sumForces.y = 0.0;
+   }
+
+   // !!!THIS IS IMPORTANT!!!
+   // Integrate acceleration and velocity to find the new position
+   integrate(deltaTime: number) {
+      // acceleration = force / mass
+      this.acceleration = Vector2.scaleDiv(this.sumForces, this.mass);
       // particle.velocity += particle.acceleration * deltaTime
       this.velocity.add(Vector2.scale(this.acceleration, deltaTime));
       // particle.position += particle.velocity * deltaTime
       this.position.add(Vector2.scale(this.velocity, deltaTime));
+      // remove all forces at end of frame
+      this.clearForces();
    }
 
    setVelocity(x: number, y: number) {

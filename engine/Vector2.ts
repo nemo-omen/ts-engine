@@ -29,6 +29,11 @@ export class Vector2 {
       this.y *= n;
    }
 
+   scaleDiv(n: number) {
+      this.x /= n;
+      this.y /= n;
+   }
+
    translate(opt: { tx: number, ty: number; }) {
       this.x += opt.tx;
       this.y += opt.ty;
@@ -42,6 +47,11 @@ export class Vector2 {
    mult(v: Vector2) {
       this.x *= v.x;
       this.y *= v.y;
+   }
+
+   div(v: Vector2) {
+      this.x /= v.x;
+      this.y /= v.y;
    }
 
    normalize() {
@@ -95,6 +105,10 @@ export class Vector2 {
    // Vector2.scale(-1)
    static scale(v: Vector2, n: number): Vector2 {
       return new Vector2((v.x * n), (v.y * n));
+   }
+
+   static scaleDiv(v: Vector2, n: number): Vector2 {
+      return new Vector2((v.x / n), (v.y / n));
    }
 
    static translate(v: Vector2, opt: { tx: number, ty: number; }): Vector2 {

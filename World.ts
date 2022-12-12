@@ -1,3 +1,5 @@
+import { PIXELS_PER_METER } from "./constants.ts";
+import { Vector2 } from "./engine/Vector2.ts";
 import { Particle } from "./Particle.ts";
 
 export class World {
@@ -9,6 +11,10 @@ export class World {
 
 
    constructor () {
+      const smallBall = new Particle(100, 100, 8, 1);
+      this.particles.push(smallBall);
+      const bigBall = new Particle(50, 100, 12, 3.0);
+      this.particles.push(bigBall);
       // this.addParticle(100, 200);
    }
 
@@ -24,6 +30,15 @@ export class World {
          //    p.velocity.scale(-1);
          //    // p.position.y = this.height - p.radius;
          // }
+         // apply a "wind" force
+         const wind: Vector2 = new Vector2(0.2 * PIXELS_PER_METER, 0.0);
+         p.addForce(wind);
+
+         // apply a "weight" force
+         // weight = mass * acceleration of gravity
+         const weight: Vector2 = new Vector2(0.0, 9.8 * PIXELS_PER_METER);
+         p.addForce(p.weight());
+
          if ((p.position.x - p.radius) <= 10) {
             p.acceleration.x *= -0.9;
             p.position.x = (p.radius + 10);
