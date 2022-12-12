@@ -1,3 +1,4 @@
+import { PIXELS_PER_METER } from './constants';
 import { Graphics } from './Graphics.ts';
 import { Particle } from './Particle.ts';
 import { World } from './World.ts';
@@ -82,6 +83,22 @@ export class App {
             if (event.key === 'Escape') {
                this.stop();
             }
+
+            if (event.key === 'ArrowRight') {
+               this.world.pushForce.x = 0;
+            }
+
+            if (event.key === 'ArrowLeft') {
+               this.world.pushForce.x = 0;
+            }
+
+            if (event.key === 'ArrowUp') {
+               this.world.pushForce.y = 0;
+            }
+
+            if (event.key === 'ArrowDown') {
+               this.world.pushForce.y = 0;
+            }
          } else {
             if (event.key === 'Enter') {
                this.start();
@@ -89,6 +106,27 @@ export class App {
          }
 
          console.log(event);
+      });
+
+      document.addEventListener('keydown', (event) => {
+         if (this.running) {
+
+            if (event.key === 'ArrowRight') {
+               this.world.pushForce.x = 50 * PIXELS_PER_METER;
+            }
+
+            if (event.key === 'ArrowLeft') {
+               this.world.pushForce.x = -50 * PIXELS_PER_METER;
+            }
+
+            if (event.key === 'ArrowUp') {
+               this.world.pushForce.y = -50 * PIXELS_PER_METER;
+            }
+
+            if (event.key === 'ArrowDown') {
+               this.world.pushForce.y = 50 * PIXELS_PER_METER;
+            }
+         }
       });
 
       this.g.canvas.addEventListener('click', (event: MouseEvent) => {

@@ -8,13 +8,14 @@ export class World {
    deltaTime = 0.0;
    lastTime = 0.0;
    particles: Particle[] = [];
+   pushForce: Vector2 = new Vector2(0.0, 0.0);
 
 
    constructor () {
       const smallBall = new Particle(100, 100, 8, 1);
       this.particles.push(smallBall);
-      const bigBall = new Particle(50, 100, 12, 3.0);
-      this.particles.push(bigBall);
+      // const bigBall = new Particle(50, 100, 12, 3.0);
+      // this.particles.push(bigBall);
       // this.addParticle(100, 200);
    }
 
@@ -38,6 +39,9 @@ export class World {
          // weight = mass * acceleration of gravity
          const weight: Vector2 = new Vector2(0.0, 9.8 * PIXELS_PER_METER);
          p.addForce(p.weight());
+
+         // apply "pushForce" (keyboard push)
+         p.addForce(this.pushForce);
 
          if ((p.position.x - p.radius) <= 10) {
             p.acceleration.x *= -0.9;
