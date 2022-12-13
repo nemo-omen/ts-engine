@@ -59,7 +59,7 @@ export class World {
          for (const p2 of this.particles) {
             if (p2 !== p) {
                // console.log(p2);
-               const attraction = generateGravity(p, p2, 0.0000000000674);
+               const attraction = generateGravity(p, p2, 2);
                p.addForce(attraction);
                p2.addForce(Vector2.scale(attraction, -1));
             }
