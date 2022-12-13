@@ -19,4 +19,17 @@ function generateFriction(p: Particle, k: number): Vector2 {
    return Vector2.scale(frictionDirection, frictionMagnitude);
 }
 
-export { generateDrag, generateFriction };
+function generateGravity(a: Particle, b: Particle, G: number): Vector2 {
+   // Fg = G * ((a.mass * b.mass) / distance^2) * direction
+   const d = Vector2.subtract(a.position, b.position);
+   // console.log({ d });
+   const distanceSquared = d.magnitudeSquared();
+   const attractionDirection = d.unitVector();
+   const attractionMagnitude = G * ((a.mass * b.mass) / distanceSquared);
+   // console.log({ attractionMagnitude });
+
+   const attraction = Vector2.scale(attractionDirection, attractionMagnitude);
+   return attraction;
+}
+
+export { generateDrag, generateFriction, generateGravity };

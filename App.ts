@@ -16,6 +16,8 @@ export class App {
    root: HTMLElement;
    deltaTime = 0.0;
    lastTime = 0.0;
+   mode = 'drag';
+   isDragging = false;
    isPoolDraw = false;
    impulseLine: Record<string, number>[] = [];
 
@@ -29,10 +31,10 @@ export class App {
    setup() {
       this.world.setDimensions(this.root.clientWidth, this.root.clientHeight);
       this.g.setDimensions(this.root.clientWidth, this.root.clientHeight);
-      this.world.addParticle(this.world.width / 2, this.world.height / 2, 12.0, 2.0);
+      this.world.addParticle((this.world.width / 2) - 25, this.world.height / 2, 12.0, 2.0);
+      this.world.addParticle((this.world.width / 2) + 25, this.world.height / 2, 24.0, 10.0);
       this.setListeners();
       this.start();
-      // this.update.bind(this);
    }
 
    start() {
@@ -68,9 +70,11 @@ export class App {
          if (this.impulseLine.length > 0) {
             this.g.drawLine({ x: this.impulseLine[0].x, y: this.impulseLine[0].y }, { x: this.impulseLine[1].x, y: this.impulseLine[1].y });
          }
+
          for (const p of this.world.particles) {
             this.g.drawCircle(p.position.x, p.position.y, p.radius, 'tomato', 'cyan', 1);
          }
+
          requestAnimationFrame(() => this.update());
       } else {
          this.g.clear();
@@ -91,26 +95,36 @@ export class App {
       this.world.setDimensions(this.root.clientWidth, this.root.clientHeight);
    }
 
-   handleMouseDown(p: Particle) {
+   handleMouseDown(p: Particle, event: MouseEvent) {
       this.g.canvas.addEventListener('mousemove', (event) => {
          this.handleMouseMove(p, event);
       });
-   }
 
-   handleMouseMove(p: Particle, event: MouseEvent) {
-      if (this.isPoolDraw) {
-         this.impulseLine = [{ x: p.position.x, y: p.position.y }, { x: event.x, y: event.y }];
-         // this.g.clear();
-         this.g.canvas.addEventListener('mouseup', (event) => {
-            this.handleMouseUp(p, { x: event.x, y: event.y });
-         });
+      if (this.mode === 'drag' && this.isDragging) {
+         p.position.x = event.x;
+         p.position.y = event.y;
       }
    }
 
-   handleMouseUp(p: Particle, terminal: Record<string, number>) {
-      if (this.isPoolDraw) {
+   handleMouseMove(p: Particle, event: MouseEvent) {
+
+      if (this.mode === 'pool' && this.isPoolDraw) {
+         this.impulseLine = [{ x: p.position.x, y: p.position.y }, { x: event.x, y: event.y }];
+      }
+      this.g.canvas.addEventListener('mouseup', (event) => {
+         this.handleMouseUp(p, event);
+      });
+
+      if (this.mode === 'drag' && this.isDragging) {
+         p.position.x = event.x;
+         p.position.y = event.y;
+      }
+   }
+
+   handleMouseUp(p: Particle, event: MouseEvent) {
+      if (this.mode === 'pool' && this.isPoolDraw) {
          const dragVector = Vector2.subtract(
-            new Vector2(terminal.x, terminal.y),
+            new Vector2(event.x, event.y),
             p.position
          );
 
@@ -119,9 +133,18 @@ export class App {
          p.velocity = Vector2.scale(impulseDirection, (impulseMagnitude * -5));
       }
 
-      this.impulseLine = [];
+      if (this.mode === 'drag' && this.isDragging) {
+         p.position.x = event.x;
+         p.position.y = event.y;
+         this.isDragging = false;
+         console.log('Dragging done');
+      }
 
-      this.isPoolDraw = false;
+
+      if (this.mode === 'pool' && this.isPoolDraw) {
+         this.impulseLine = [];
+         this.isPoolDraw = false;
+      }
    }
 
    setListeners() {
@@ -198,16 +221,18 @@ export class App {
                   event.y <= p.position.y + (p.radius + 16) &&
                   event.y >= p.position.y - (p.radius + 16)
                ) {
-                  this.isPoolDraw = true;
-                  this.handleMouseDown(p);
+                  if (this.mode === 'pool') {
+                     this.isPoolDraw = true;
+                  }
+
+                  if (this.mode === 'drag') {
+                     this.isDragging = true;
+                  }
+
+                  this.handleMouseDown(p, event);
                }
             }
          }
-      });
-
-      this.g.canvas.addEventListener('drag', (event: Event) => {
-         // do something
-         console.log(event);
       });
    }
 }

@@ -1,6 +1,6 @@
 import { PIXELS_PER_METER } from "./constants.ts";
 import { Vector2 } from "./physics/Vector2.ts";
-import { generateDrag, generateFriction } from './physics/Force.ts';
+import { generateDrag, generateFriction, generateGravity } from './physics/Force.ts';
 import { Particle } from "./physics/Particle.ts";
 
 export class World {
@@ -54,8 +54,16 @@ export class World {
          // }
 
          // apply friction force
-         const friction = generateFriction(p, 10.0 * PIXELS_PER_METER);
-         p.addForce(friction);
+         // const friction = generateFriction(p, 10.0 * PIXELS_PER_METER);
+         // p.addForce(friction);
+         for (const p2 of this.particles) {
+            if (p2 !== p) {
+               // console.log(p2);
+               const attraction = generateGravity(p, p2, 0.0000000000674);
+               p.addForce(attraction);
+               p2.addForce(Vector2.scale(attraction, -1));
+            }
+         }
 
          if ((p.position.x - p.radius) <= 10) {
             p.acceleration.x *= -0.9;
