@@ -19,15 +19,14 @@ function generateFriction(p: Particle, k: number): Vector2 {
    return Vector2.scale(frictionDirection, frictionMagnitude);
 }
 
-function generateGravity(a: Particle, b: Particle, G: number): Vector2 {
+function generateGravity(a: Particle, b: Particle, G: number, minDistance: number, MaxDistance: number): Vector2 {
    // Fg = G * ((a.mass * b.mass) / distance^2) * direction
    const d = Vector2.subtract(a.position, b.position);
-   // console.log({ d });
-   const distanceSquared = d.magnitudeSquared();
+   let distanceSquared = d.magnitudeSquared();
+   distanceSquared = Math.min(Math.max(distanceSquared, minDistance), MaxDistance);
+
    const attractionDirection = d.unitVector();
    const attractionMagnitude = G * ((a.mass * b.mass) / distanceSquared);
-   // console.log({ attractionMagnitude });
-
    const attraction = Vector2.scale(attractionDirection, attractionMagnitude);
    return attraction;
 }

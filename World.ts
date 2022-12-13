@@ -10,6 +10,7 @@ export class World {
    lastTime = 0.0;
    particles: Particle[] = [];
    pushForce: Vector2 = new Vector2(0.0, 0.0);
+   nudgeIterator = 1000;
    // water: number[] = [];
 
 
@@ -28,6 +29,15 @@ export class World {
    }
 
    update(deltaTime: number) {
+      const attraction = generateGravity(this.particles[0], this.particles[1], 500, 5, 50);
+      // this.particles[0].addForce(this.pushForce);
+      if (this.nudgeIterator > 0) {
+         this.particles[0].addForce(new Vector2(10, 10));
+         this.nudgeIterator--;
+      } else {
+         this.particles[0].addForce(Vector2.scale(attraction, -1));
+      }
+      // this.particles[1].addForce(attraction);
       for (const p of this.particles) {
          // if (!this.onScreen(p.position.x, p.position.y)) {
          //    p.acceleration.scale(-1);
@@ -44,7 +54,7 @@ export class World {
          // p.addForce(weight);
 
          // apply "pushForce" (keyboard push)
-         p.addForce(this.pushForce);
+         // p.addForce(this.pushForce);
 
          // drag force for water area
          // if (p.position.y >= this.water[1]) {
@@ -56,14 +66,6 @@ export class World {
          // apply friction force
          // const friction = generateFriction(p, 10.0 * PIXELS_PER_METER);
          // p.addForce(friction);
-         for (const p2 of this.particles) {
-            if (p2 !== p) {
-               // console.log(p2);
-               const attraction = generateGravity(p, p2, 2);
-               p.addForce(attraction);
-               p2.addForce(Vector2.scale(attraction, -1));
-            }
-         }
 
          if ((p.position.x - p.radius) <= 10) {
             p.acceleration.x *= -0.9;
@@ -97,8 +99,8 @@ export class World {
       this.particles = [];
    }
 
-   addParticle(x: number, y: number, radius: number = 8, mass: number = 1) {
-      const p = new Particle(x, y, radius, mass);
+   addParticle(x: number, y: number, radius: number = 8, mass: number = 1, fill: string = 'tomato', stroke: string = 'white', lineWidth: number = 3) {
+      const p = new Particle(x, y, radius, mass, fill, stroke, lineWidth);
       this.particles.push(p);
    }
 

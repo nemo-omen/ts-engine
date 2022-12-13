@@ -48,26 +48,20 @@ class Graphics {
       this.clear();
    }
 
-   drawCircle(x: number, y: number, r: number, fill: string, stroke: string, lineWidth: number): void {
+   drawCircle(
+      x: number,
+      y: number,
+      r: number,
+      fill: string,
+      stroke: string,
+      lineWidth: number
+   ): void {
       this.ctx!.beginPath();
       this.ctx!.arc(x, y, r, 0, 2 * Math.PI, false);
-
-      if (!fill) {
-         this.ctx!.fillStyle = '#ffffff';
-      } else {
-         this.ctx!.fillStyle = fill;
-      }
-
+      this.ctx!.fillStyle = fill;
       this.ctx!.fill();
-
-      if (stroke) {
-         this.ctx!.strokeStyle = stroke;
-      }
-
-      if (lineWidth) {
-         this.ctx!.lineWidth = lineWidth;
-      }
-
+      this.ctx!.strokeStyle = stroke;
+      this.ctx!.lineWidth = lineWidth;
       this.ctx!.stroke();
    }
 

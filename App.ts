@@ -16,7 +16,7 @@ export class App {
    root: HTMLElement;
    deltaTime = 0.0;
    lastTime = 0.0;
-   mode = 'drag';
+   mode = 'impulse';
    isDragging = false;
    isPoolDraw = false;
    impulseLine: Record<string, number>[] = [];
@@ -31,8 +31,27 @@ export class App {
    setup() {
       this.world.setDimensions(this.root.clientWidth, this.root.clientHeight);
       this.g.setDimensions(this.root.clientWidth, this.root.clientHeight);
-      this.world.addParticle((this.world.width / 2) - 25, this.world.height / 2, 12.0, 2.0);
-      this.world.addParticle((this.world.width / 2) + 25, this.world.height / 2, 24.0, 10.0);
+
+      this.world.addParticle(
+         (this.world.width / 2) - 200,
+         this.world.height / 2,
+         4.0,
+         1.0,
+         'deepskyblue',
+         'skyblue',
+         0
+      );
+
+      this.world.addParticle(
+         (this.world.width / 2),
+         this.world.height / 2,
+         40.0,
+         20.0,
+         'yellow',
+         'yellow',
+         0
+      );
+
       this.setListeners();
       this.start();
    }
@@ -72,7 +91,14 @@ export class App {
          }
 
          for (const p of this.world.particles) {
-            this.g.drawCircle(p.position.x, p.position.y, p.radius, 'tomato', 'cyan', 1);
+            this.g.drawCircle(
+               p.position.x,
+               p.position.y,
+               p.radius,
+               p.fill,
+               p.stroke,
+               p.lineWidth
+            );
          }
 
          requestAnimationFrame(() => this.update());
@@ -108,7 +134,7 @@ export class App {
 
    handleMouseMove(p: Particle, event: MouseEvent) {
 
-      if (this.mode === 'pool' && this.isPoolDraw) {
+      if (this.mode === 'impulse' && this.isPoolDraw) {
          this.impulseLine = [{ x: p.position.x, y: p.position.y }, { x: event.x, y: event.y }];
       }
       this.g.canvas.addEventListener('mouseup', (event) => {
@@ -122,7 +148,7 @@ export class App {
    }
 
    handleMouseUp(p: Particle, event: MouseEvent) {
-      if (this.mode === 'pool' && this.isPoolDraw) {
+      if (this.mode === 'impulse' && this.isPoolDraw) {
          const dragVector = Vector2.subtract(
             new Vector2(event.x, event.y),
             p.position
@@ -141,7 +167,7 @@ export class App {
       }
 
 
-      if (this.mode === 'pool' && this.isPoolDraw) {
+      if (this.mode === 'impulse' && this.isPoolDraw) {
          this.impulseLine = [];
          this.isPoolDraw = false;
       }
@@ -213,26 +239,28 @@ export class App {
       });
 
       this.g.canvas.addEventListener('mousedown', (event) => {
-         if (this.world.particles.length > 0) {
-            for (let p of this.world.particles) {
-               if (
-                  event.x <= p.position.x + (p.radius + 16) &&
-                  event.x >= p.position.x - (p.radius + 16) &&
-                  event.y <= p.position.y + (p.radius + 16) &&
-                  event.y >= p.position.y - (p.radius + 16)
-               ) {
-                  if (this.mode === 'pool') {
-                     this.isPoolDraw = true;
-                  }
+         // if (this.world.particles.length > 0) {
+         // for (let p of this.world.particles) {
+         const p = this.world.particles[0];
 
-                  if (this.mode === 'drag') {
-                     this.isDragging = true;
-                  }
-
-                  this.handleMouseDown(p, event);
-               }
+         if (
+            event.x <= p.position.x + (p.radius + 16) &&
+            event.x >= p.position.x - (p.radius + 16) &&
+            event.y <= p.position.y + (p.radius + 16) &&
+            event.y >= p.position.y - (p.radius + 16)
+         ) {
+            if (this.mode === 'impulse') {
+               this.isPoolDraw = true;
             }
+
+            if (this.mode === 'drag') {
+               this.isDragging = true;
+            }
+
+            this.handleMouseDown(p, event);
          }
+         // }
+         // }
       });
    }
 }

@@ -9,8 +9,19 @@ export class Particle {
    sumForces: Vector2;
    mass: number;
    invMass: number;
+   fill: string;
+   stroke: string;
+   lineWidth: number;
 
-   constructor (x: number, y: number, radius: number = 8.0, mass: number = 1.0) {
+   constructor (
+      x: number,
+      y: number,
+      radius: number = 8.0,
+      mass: number = 1.0,
+      fill: string,
+      stroke: string,
+      lineWidth: number
+   ) {
       this.position = new Vector2(x, y);
       this.radius = radius;
       this.velocity = new Vector2(0, 0);
@@ -22,6 +33,10 @@ export class Particle {
       } else {
          this.invMass = 0.0;
       }
+
+      this.fill = fill;
+      this.stroke = stroke;
+      this.lineWidth = lineWidth;
    }
 
    update(deltaTime: number) {
