@@ -71,6 +71,33 @@ class Graphics {
       this.ctx!.stroke();
    }
 
+   drawRect(
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+      fill: string,
+      stroke: string,
+      lineWidth: number,
+      alpha = 1.0
+   ) {
+      this.ctx!.globalAlpha = alpha;
+
+      if (fill !== undefined) {
+         this.ctx!.fillStyle = fill;
+         this.ctx!.fillRect(x, y, width, height);
+      }
+
+      if (stroke !== undefined && lineWidth !== undefined) {
+         this.ctx!.lineWidth = lineWidth;
+         this.ctx!.strokeStyle = stroke;
+         this.ctx!.stroke();
+         // this.ctx!.strokeRect(x, y, width, height);
+      }
+
+      this.ctx!.globalAlpha = 1.0;
+   }
+
    clear(): void {
       this.ctx!.fillStyle = this.bg;
       this.ctx!.fillRect(0, 0, this.width, this.height);

@@ -1,5 +1,5 @@
-import { Vector2 } from './engine/Vector2.ts';
-import { PIXELS_PER_METER } from './constants.ts';
+import { Vector2 } from './Vector2.ts';
+import { PIXELS_PER_METER } from '../constants.ts';
 
 export class Particle {
    radius: number;

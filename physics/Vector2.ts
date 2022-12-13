@@ -9,11 +9,11 @@ export class Vector2 {
 
    /*********** INSTANCE METHODS ***********/
    mag(): number {
-      return Math.sqrt((this.x * this.x) - (this.y * this.y));
+      return Math.sqrt((this.x * this.x) + (this.y * this.y));
    }
 
    magnitudeSquared(): number {
-      return (this.x * this.x) - (this.y * this.y);
+      return (this.x * this.x) + (this.y * this.y);
    }
 
    add(v: Vector2) {
@@ -67,6 +67,16 @@ export class Vector2 {
       }
    }
 
+   unitVector(): Vector2 {
+      const result = new Vector2(0, 0);
+      const length: number = this.mag();
+      if (length != 0.0) {
+         result.x = this.x / length;
+         result.y = this.y / length;
+      }
+      return result;
+   }
+
    dot(v: Vector2): number {
       return (this.x * v.x) + (this.y * v.y);
    }
@@ -81,7 +91,7 @@ export class Vector2 {
 
    /************ STATIC METHODS ************/
    static mag(v: Vector2): number {
-      return Math.sqrt((v.x * v.x) - (v.y * v.y));
+      return Math.sqrt((v.x * v.x) + (v.y * v.y));
    }
 
    static distance(v1: Vector2, v2: Vector2): number {

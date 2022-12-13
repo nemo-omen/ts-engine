@@ -1,4 +1,4 @@
-import { Vector2 } from './engine/Vector2.ts';
+import { Vector2 } from './physics/Vector2.ts';
 
 export type CircleOptions = {
   cx: number;

@@ -1,6 +1,7 @@
 import { PIXELS_PER_METER } from "./constants.ts";
-import { Vector2 } from "./engine/Vector2.ts";
-import { Particle } from "./Particle.ts";
+import { Vector2 } from "./physics/Vector2.ts";
+import { generateDrag, generateFriction } from './physics/Force.ts';
+import { Particle } from "./physics/Particle.ts";
 
 export class World {
    width = 0;
@@ -9,6 +10,7 @@ export class World {
    lastTime = 0.0;
    particles: Particle[] = [];
    pushForce: Vector2 = new Vector2(0.0, 0.0);
+   // water: number[] = [];
 
 
    constructor () {
@@ -22,6 +24,7 @@ export class World {
    setDimensions(width: number, height: number) {
       this.width = width;
       this.height = height;
+      // this.water = [0.0, this.height * 0.6, this.width, this.height - (this.height * 0.6)];
    }
 
    update(deltaTime: number) {
@@ -32,16 +35,27 @@ export class World {
          //    // p.position.y = this.height - p.radius;
          // }
          // apply a "wind" force
-         const wind: Vector2 = new Vector2(0.2 * PIXELS_PER_METER, 0.0);
-         p.addForce(wind);
+         // const wind: Vector2 = new Vector2(0.2 * PIXELS_PER_METER, 0.0);
+         // p.addForce(wind);
 
          // apply a "weight" force
          // weight = mass * acceleration of gravity
-         const weight: Vector2 = new Vector2(0.0, 9.8 * PIXELS_PER_METER);
-         p.addForce(p.weight());
+         // const weight: Vector2 = new Vector2(0.0, 9.8 * PIXELS_PER_METER);
+         // p.addForce(weight);
 
          // apply "pushForce" (keyboard push)
          p.addForce(this.pushForce);
+
+         // drag force for water area
+         // if (p.position.y >= this.water[1]) {
+         //    const drag: Vector2 = generateDrag(p, 0.06);
+         //    // console.log(drag);
+         //    p.addForce(drag);
+         // }
+
+         // apply friction force
+         const friction = generateFriction(p, 10.0 * PIXELS_PER_METER);
+         p.addForce(friction);
 
          if ((p.position.x - p.radius) <= 10) {
             p.acceleration.x *= -0.9;
@@ -66,6 +80,7 @@ export class World {
             p.position.y = (this.height - (10 + p.radius));
             p.velocity.y *= -0.9;
          }
+
          p.update(deltaTime);
       }
    }
@@ -74,8 +89,8 @@ export class World {
       this.particles = [];
    }
 
-   addParticle(x: number, y: number) {
-      const p = new Particle(x, y);
+   addParticle(x: number, y: number, radius: number = 8, mass: number = 1) {
+      const p = new Particle(x, y, radius, mass);
       this.particles.push(p);
    }
 

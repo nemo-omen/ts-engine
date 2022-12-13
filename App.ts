@@ -1,6 +1,5 @@
 import { PIXELS_PER_METER } from './constants';
-import { Graphics } from './Graphics.ts';
-import { Particle } from './Particle.ts';
+import { Graphics } from './graphics/Graphics.ts';
 import { World } from './World.ts';
 
 
@@ -48,6 +47,18 @@ export class App {
       this.setDelta();
       if (this.running) {
          this.world.update(this.deltaTime);
+
+         // draw liquid on bottom third of the screen
+         // this.g.drawRect(
+         //    this.world.water[0],
+         //    this.world.water[1],
+         //    this.world.water[2],
+         //    this.world.water[3],
+         //    'deepskyblue',
+         //    'deepskyblue',
+         //    0,
+         //    0.3
+         // );
 
          for (const p of this.world.particles) {
             this.g.drawCircle(p.position.x, p.position.y, p.radius, 'tomato', 'cyan', 1);
@@ -104,8 +115,6 @@ export class App {
                this.start();
             }
          }
-
-         console.log(event);
       });
 
       document.addEventListener('keydown', (event) => {
@@ -132,7 +141,12 @@ export class App {
       this.g.canvas.addEventListener('click', (event: MouseEvent) => {
          // do something
          // console.log(event);
-         this.world.addParticle(event.x, event.y);
+         this.world.addParticle(
+            event.x,
+            event.y,
+            Math.random() * (12.0 - 4.0) + 4.0,
+            Math.random() * (10.0 - 1.0) + 1.0
+         );
       });
 
       this.g.canvas.addEventListener('drag', (event: Event) => {
