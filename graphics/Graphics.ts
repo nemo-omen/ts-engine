@@ -98,6 +98,15 @@ class Graphics {
       this.ctx!.globalAlpha = 1.0;
    }
 
+   drawLine(origin: Record<string, number>, terminal: Record<string, number>, lineWidth: number = 1, strokeStyle: string = '#ffffff') {
+      this.ctx!.beginPath();
+      this.ctx!.moveTo(origin.x, origin.y);
+      this.ctx!.lineTo(terminal.x, terminal.y);
+      this.ctx!.strokeStyle = strokeStyle;
+      this.ctx!.lineWidth = lineWidth;
+      this.ctx!.stroke();
+   }
+
    clear(): void {
       this.ctx!.fillStyle = this.bg;
       this.ctx!.fillRect(0, 0, this.width, this.height);

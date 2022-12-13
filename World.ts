@@ -14,8 +14,8 @@ export class World {
 
 
    constructor () {
-      const smallBall = new Particle(100, 100, 8, 1);
-      this.particles.push(smallBall);
+      // const smallBall = new Particle(100, 100, 8, 1);
+      // this.particles.push(smallBall);
       // const bigBall = new Particle(50, 100, 12, 3.0);
       // this.particles.push(bigBall);
       // this.addParticle(100, 200);

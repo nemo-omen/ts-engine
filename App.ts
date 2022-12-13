@@ -1,5 +1,7 @@
 import { PIXELS_PER_METER } from './constants';
 import { Graphics } from './graphics/Graphics.ts';
+import { Vector2 } from './physics/Vector2.ts';
+import { Particle } from './physics/Particle.ts';
 import { World } from './World.ts';
 
 
@@ -14,6 +16,8 @@ export class App {
    root: HTMLElement;
    deltaTime = 0.0;
    lastTime = 0.0;
+   isPoolDraw = false;
+   impulseLine: Record<string, number>[] = [];
 
    constructor (root: HTMLElement = document.body) {
       this.world = new World();
@@ -25,9 +29,10 @@ export class App {
    setup() {
       this.world.setDimensions(this.root.clientWidth, this.root.clientHeight);
       this.g.setDimensions(this.root.clientWidth, this.root.clientHeight);
+      this.world.addParticle(this.world.width / 2, this.world.height / 2, 12.0, 2.0);
       this.setListeners();
       this.start();
-      this.update.bind(this);
+      // this.update.bind(this);
    }
 
    start() {
@@ -60,6 +65,9 @@ export class App {
          //    0.3
          // );
 
+         if (this.impulseLine.length > 0) {
+            this.g.drawLine({ x: this.impulseLine[0].x, y: this.impulseLine[0].y }, { x: this.impulseLine[1].x, y: this.impulseLine[1].y });
+         }
          for (const p of this.world.particles) {
             this.g.drawCircle(p.position.x, p.position.y, p.radius, 'tomato', 'cyan', 1);
          }
@@ -81,6 +89,39 @@ export class App {
    setDimensions() {
       this.g.setDimensions(this.root.clientWidth, this.root.clientHeight);
       this.world.setDimensions(this.root.clientWidth, this.root.clientHeight);
+   }
+
+   handleMouseDown(p: Particle) {
+      this.g.canvas.addEventListener('mousemove', (event) => {
+         this.handleMouseMove(p, event);
+      });
+   }
+
+   handleMouseMove(p: Particle, event: MouseEvent) {
+      if (this.isPoolDraw) {
+         this.impulseLine = [{ x: p.position.x, y: p.position.y }, { x: event.x, y: event.y }];
+         // this.g.clear();
+         this.g.canvas.addEventListener('mouseup', (event) => {
+            this.handleMouseUp(p, { x: event.x, y: event.y });
+         });
+      }
+   }
+
+   handleMouseUp(p: Particle, terminal: Record<string, number>) {
+      if (this.isPoolDraw) {
+         const dragVector = Vector2.subtract(
+            new Vector2(terminal.x, terminal.y),
+            p.position
+         );
+
+         const impulseDirection = dragVector.unitVector();
+         const impulseMagnitude = dragVector.mag();
+         p.velocity = Vector2.scale(impulseDirection, (impulseMagnitude * -5));
+      }
+
+      this.impulseLine = [];
+
+      this.isPoolDraw = false;
    }
 
    setListeners() {
@@ -139,14 +180,29 @@ export class App {
       });
 
       this.g.canvas.addEventListener('click', (event: MouseEvent) => {
-         // do something
-         // console.log(event);
-         this.world.addParticle(
-            event.x,
-            event.y,
-            Math.random() * (12.0 - 4.0) + 4.0,
-            Math.random() * (10.0 - 1.0) + 1.0
-         );
+         // add particle with random radius and mass
+         // this.world.addParticle(
+         //    event.x,
+         //    event.y,
+         //    Math.random() * (12.0 - 4.0) + 4.0,
+         //    Math.random() * (10.0 - 1.0) + 1.0
+         // );
+      });
+
+      this.g.canvas.addEventListener('mousedown', (event) => {
+         if (this.world.particles.length > 0) {
+            for (let p of this.world.particles) {
+               if (
+                  event.x <= p.position.x + (p.radius + 16) &&
+                  event.x >= p.position.x - (p.radius + 16) &&
+                  event.y <= p.position.y + (p.radius + 16) &&
+                  event.y >= p.position.y - (p.radius + 16)
+               ) {
+                  this.isPoolDraw = true;
+                  this.handleMouseDown(p);
+               }
+            }
+         }
       });
 
       this.g.canvas.addEventListener('drag', (event: Event) => {
