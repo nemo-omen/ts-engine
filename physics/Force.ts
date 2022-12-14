@@ -1,3 +1,4 @@
+import { PIXELS_PER_METER } from "../constants.ts";
 import { Particle } from "./Particle.ts";
 import { Vector2 } from "./Vector2.ts";
 
@@ -31,4 +32,11 @@ function generateGravity(a: Particle, b: Particle, G: number, minDistance: numbe
    return attraction;
 }
 
-export { generateDrag, generateFriction, generateGravity };
+function jumpImpulse(velocity: Vector2): Vector2 {
+   const baseVec = new Vector2((velocity.x * -1), velocity.y + 5 * PIXELS_PER_METER);
+   const impulseDirection = baseVec.unitVector();
+   const impulseMagnitude = baseVec.mag();
+   return Vector2.scale(impulseDirection, (impulseMagnitude * -5));
+}
+
+export { generateDrag, generateFriction, generateGravity, jumpImpulse };

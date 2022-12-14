@@ -3,7 +3,7 @@ import { Graphics } from './graphics/Graphics.ts';
 import { Vector2 } from './physics/Vector2.ts';
 import { Particle } from './physics/Particle.ts';
 import { World } from './World.ts';
-
+import { jumpImpulse } from './physics/Force.ts';
 
 
 // 1. handle input
@@ -20,6 +20,7 @@ export class App {
    isDragging = false;
    isPoolDraw = false;
    impulseLine: Record<string, number>[] = [];
+   isJumping: boolean = false;
 
    constructor (root: HTMLElement = document.body) {
       this.world = new World();
@@ -36,21 +37,21 @@ export class App {
          (this.world.width / 2) - 200,
          this.world.height / 2,
          4.0,
-         1.0,
+         0.75,
          'deepskyblue',
          'skyblue',
          0
       );
 
-      this.world.addParticle(
-         (this.world.width / 2),
-         this.world.height / 2,
-         40.0,
-         20.0,
-         'yellow',
-         'yellow',
-         0
-      );
+      // this.world.addParticle(
+      //    (this.world.width / 2),
+      //    this.world.height / 2,
+      //    40.0,
+      //    20.0,
+      //    'yellow',
+      //    'yellow',
+      //    0
+      // );
 
       this.setListeners();
       this.start();
@@ -194,6 +195,11 @@ export class App {
             }
 
             if (event.key === 'ArrowUp') {
+               console.log('keyup');
+               if (this.isJumping) {
+                  this.world.jumpForce.y = 0;
+                  this.isJumping = false;
+               }
                this.world.pushForce.y = 0;
             }
 
@@ -211,20 +217,30 @@ export class App {
          if (this.running) {
 
             if (event.key === 'ArrowRight') {
-               this.world.pushForce.x = 50 * PIXELS_PER_METER;
+               this.world.pushForce.x = 20 * PIXELS_PER_METER;
             }
 
             if (event.key === 'ArrowLeft') {
-               this.world.pushForce.x = -50 * PIXELS_PER_METER;
+               this.world.pushForce.x = -20 * PIXELS_PER_METER;
             }
 
             if (event.key === 'ArrowUp') {
-               this.world.pushForce.y = -50 * PIXELS_PER_METER;
+               // this.world.pushForce.y = -50 * PIXELS_PER_METER;
+               if (!this.isJumping) {
+                  if (this.world.particles[0].position.y <= (this.world.height - this.world.particles[0].radius)) {
+                     this.isJumping = true;
+                     // this.world.jumpForce.y = -100 * PIXELS_PER_METER;
+                     this.world.particles[0].velocity = jumpImpulse(this.world.particles[0].velocity);
+                  } else {
+                     this.world.jumpForce.y = 0;
+                     this.world.pushForce.y = 0;
+                  }
+               }
             }
 
-            if (event.key === 'ArrowDown') {
-               this.world.pushForce.y = 50 * PIXELS_PER_METER;
-            }
+            // if (event.key === 'ArrowDown') {
+            //    this.world.pushForce.y = 50 * PIXELS_PER_METER;
+            // }
          }
       });
 

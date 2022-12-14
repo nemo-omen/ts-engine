@@ -10,6 +10,7 @@ export class World {
    lastTime = 0.0;
    particles: Particle[] = [];
    pushForce: Vector2 = new Vector2(0.0, 0.0);
+   jumpForce: Vector2 = new Vector2(0.0, 0.0);
    nudgeIterator = 1000;
    // water: number[] = [];
 
@@ -29,14 +30,14 @@ export class World {
    }
 
    update(deltaTime: number) {
-      const attraction = generateGravity(this.particles[0], this.particles[1], 500, 5, 50);
+      // const attraction = generateGravity(this.particles[0], this.particles[1], 500, 5, 50);
       // this.particles[0].addForce(this.pushForce);
-      if (this.nudgeIterator > 0) {
-         this.particles[0].addForce(new Vector2(10, 10));
-         this.nudgeIterator--;
-      } else {
-         this.particles[0].addForce(Vector2.scale(attraction, -1));
-      }
+      // if (this.nudgeIterator > 0) {
+      //    this.particles[0].addForce(new Vector2(10, 10));
+      //    this.nudgeIterator--;
+      // } else {
+      //    this.particles[0].addForce(Vector2.scale(attraction, -1));
+      // }
       // this.particles[1].addForce(attraction);
       for (const p of this.particles) {
          // if (!this.onScreen(p.position.x, p.position.y)) {
@@ -50,45 +51,50 @@ export class World {
 
          // apply a "weight" force
          // weight = mass * acceleration of gravity
-         // const weight: Vector2 = new Vector2(0.0, 9.8 * PIXELS_PER_METER);
-         // p.addForce(weight);
+         const weight: Vector2 = new Vector2(0.0, 12.8 * PIXELS_PER_METER);
+         p.addForce(weight);
 
          // apply "pushForce" (keyboard push)
-         // p.addForce(this.pushForce);
+         p.addForce(this.pushForce);
+         // p.addForce(this.jumpForce);
 
          // drag force for water area
          // if (p.position.y >= this.water[1]) {
-         //    const drag: Vector2 = generateDrag(p, 0.06);
          //    // console.log(drag);
          //    p.addForce(drag);
          // }
 
          // apply friction force
-         // const friction = generateFriction(p, 10.0 * PIXELS_PER_METER);
-         // p.addForce(friction);
+         let friction = generateFriction(p, 0.025 * PIXELS_PER_METER);
+         const drag: Vector2 = generateDrag(p, 0.003);
+         if (p.position.y >= this.height - p.radius) {
+            friction = generateFriction(p, 0.08 * PIXELS_PER_METER);
+         }
+         p.addForce(drag);
+         p.addForce(friction);
 
          if ((p.position.x - p.radius) <= 10) {
-            p.acceleration.x *= -0.9;
+            p.acceleration.x *= -0.8;
             p.position.x = (p.radius + 10);
-            p.velocity.x *= -0.9;
+            p.velocity.x *= -0.8;
          }
 
          if ((p.position.x + p.radius) >= (this.width - 10)) {
-            p.acceleration.x *= -0.9;
+            p.acceleration.x *= -0.8;
             p.position.x = (this.width - (10 + p.radius));
-            p.velocity.x *= -0.9;
+            p.velocity.x *= -0.8;
          }
 
          if ((p.position.y - p.radius) <= 10) {
-            p.acceleration.y *= -0.9;
+            p.acceleration.y *= -0.8;
             p.position.y = (10 + p.radius);
-            p.velocity.y *= -0.9;
+            p.velocity.y *= -0.8;
          }
 
          if ((p.position.y + p.radius) >= (this.height - 10)) {
-            p.acceleration.y *= -0.9;
+            p.acceleration.y *= -0.3;
             p.position.y = (this.height - (10 + p.radius));
-            p.velocity.y *= -0.9;
+            p.velocity.y *= -0.3;
          }
 
          p.update(deltaTime);
